@@ -4,7 +4,7 @@ const {app, autoUpdater, dialog} = require('electron');
 const version = app.getVersion();
 const platform = os.platform() + '_' + os.arch();  // usually returns darwin_64
 
-const updaterFeedURL = 'http://zulipdesktop.herokuapp.com/update/' + platform + '/' + version;
+const updaterFeedURL = 'http://softqrate.herokuapp.com/update/' + platform + '/' + version;
 // replace updaterFeedURL with http://yourappname.herokuapp.com
 
 function appUpdater() {
@@ -28,17 +28,17 @@ function appUpdater() {
 			});
 		}
 		// Ask user to update the app
-		dialog.showMessageBox({
+		/*dialog.showMessageBox({
 			type: 'question',
 			buttons: ['Install and Relaunch', 'Later'],
 			defaultId: 0,
 			message: 'A new version of ' + app.getName() + ' has been downloaded',
 			detail: message
 		}, response => {
-			if (response === 0) {
+			if (response === 0) { +/
 				setTimeout(() => autoUpdater.quitAndInstall(), 1);
-			}
-		});
+		/*	}
+		}); */
 	});
 	// init for updates
 	autoUpdater.checkForUpdates();
