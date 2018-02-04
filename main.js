@@ -1,6 +1,33 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
+const electron = require('electron');
+const isDev = require('electron-is-dev');  // this is required to check if the app is running in development mode. 
+const {appUpdater} = require('./autoupdater');
+
+/* Handling squirrel.windows events on windows 
+only required if you have build the windows with target squirrel. For NSIS target you don't need it. */
+if (require('electron-squirrel-startup')) {
+	app.quit();
+}
+
+let mainWindow;
+
+// Funtion to check the current OS. As of now there is no proper method to add auto-updates to linux platform.
+function isWindowsOrmacOS() {
+	return process.platform === 'darwin' || process.platform === 'win32';
+}
+
+app.on('ready', () => {
+  createWindow();
+  
+  page.once('did-frame-finish-load', () => {
+    const checkOS = isWindowsOrmacOS();
+    if (checkOS && !isDev) {
+      // Initate auto-updates on macOs and windows
+      appUpdater();
+    }});
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -51,10 +78,7 @@ function createWindow () {
   })
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
